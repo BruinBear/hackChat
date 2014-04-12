@@ -1,0 +1,70 @@
+<head>
+  <title>Chat app</title>
+</head>
+
+<body>
+  {{> loginButtons align="right"}}<br>
+  <h1>Chatapp</h1>
+  {{> welcome }}
+  {{> login}}
+  {{> body}}
+  {{> body_select}}
+
+</body>
+
+<template name="welcome">
+  <p>
+    Welcome to chat app!
+  </p>
+</template>
+
+<template name="body">
+  {{#if body_select true}}
+    {{> input}}
+    {{> messages}}
+    {{> clearall}}
+  {{/if}}
+</template>
+
+<template name="body_select">
+  {{#if logged_in true}}
+    {{#if body_select}}
+    {{else}}
+      <p>I want to:
+      <input type="button" class="tutor" value="Tutor">
+      <input type="button" class="learn" value="Learn">
+      </p>
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="login">
+  {{#if logged_in true}}
+  <p>Logged in.</p>
+  {{else}}
+  <p>Username: <input type="text" id="user"></p>
+  <p>Password: <input type="text" id="pw"></p>
+  <p>Channel: <input type="text" id="channel_id"></p>
+  <input type="button" class="clicked" value="Login">
+  {{/if}}
+</template>
+
+<template name="messages">
+    {{#each messages}}
+        <strong>{{name}}:</strong> {{message}}<br>
+    {{/each}}
+</template>
+
+<template name="input">
+    <p>Name: <input type="text" id="name">
+      <!-- <input type="button" id="set_name" value="Set Name"> --></p>
+    <p>Message: <input type="text" id="message">
+    <input type="button" id="send" value="Send" />
+    </p>
+</template>
+
+<template name="clearall">
+  <p>
+    <input type="button" id="clear_chat" value="clear chat" />
+  </p>
+</template>
