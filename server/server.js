@@ -1,13 +1,13 @@
 Meteor.startup(function () {
 	Channels.insert({id : 0});
-}
+};
 
 Meteor.methods({
 	
 	//allows client to clear their chat window
 	clearchat : function() {
 			return Messages.remove({});
-		}
+		},
 
 	//finds a teacher match for the student based on their subjects
 	//returns the teacher's id or -1 for no match
