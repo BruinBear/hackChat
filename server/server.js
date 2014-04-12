@@ -47,7 +47,7 @@ Meteor.methods({
 	leaveChannel : function(cid) {	
 		Channels.update({id : cid},{$inc : {num_users : -1}});
 		if (Channels.find({id : cid}).num_users == 0)
-			Channels.remove({id : cid}
+			Channels.remove({id : cid});
 	}
 
 });  
