@@ -25,7 +25,7 @@ Meteor.methods({
 	},
 
 	deleteid : function(userid) {
-		Active_Users.remove({id : userid});
+		Active_Users.remove({id : userid}, 1);
 	},
 
 	//finds a teacher match for the student based on their subjects

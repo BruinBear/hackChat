@@ -1,6 +1,6 @@
 Session.set('channel_id', null);
 
-var storedId = -1;
+
 /**
 * Templates
 */
@@ -141,7 +141,7 @@ Template.clearall.events({
 Template.login.events({
 	'click input.clicked' : function () {
 		Session.set("logged_in", true);
-		storedId = Meteor.Id();
+		Session.set('stored_id', Meteor.userId());
 		//window.alert("working");
 	},
 })
@@ -225,13 +225,16 @@ Template.body_info.events({
 var userWasLoggedIn = false;
 
 Deps.autorun(function () {
+	alert("autorun working");
 	if (!Meteor.userId()) {
 		if (userWasLoggedIn){
-			Meteor.call('deleteid', storedId);
+			alert("correctly detected signout: " + Session.get('stored_id'));
+			Meteor.call('deleteid', Session.get('stored_id'));
 		}
 	}
 	else {
 		userWasLoggedIn = true;
+		Session.set('stored_id', Meteor.userId());
 	}
 });
 
