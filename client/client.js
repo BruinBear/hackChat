@@ -4,7 +4,9 @@ Session.set('channel_id', null);
 * Templates
 */
 Template.messages.messages = function () {
-	var channel_id = document.getElementById('channel_id');
+	var uid = Meteor.userId();
+	var channel_id = Active_Users.find({id: uid},{}).fetch()[0].channel_id;
+	//window.alert(channel_id);
 	if (channel_id == '') {
 		channel_id = 0;	// default channel id
 	}
@@ -76,10 +78,13 @@ Template.input.events({
 			if (name == '') {
 				name = "Anonymous";
 			}
-			var channel_id = document.getElementById('channel_id');
-			if (channel_id == '') {
-				channel_id = 0;	// default channel id
-			}
+			var uid = Meteor.userId();
+			var channel_id = Active_Users.find({id: uid},{}).fetch()[0].channel_id;
+
+			// FIXME: ensure channel_id is set correctly w/ server code
+			// if (channel_id == '') {
+			// 	channel_id = 0;	// default channel id
+			// }
 			var message = document.getElementById('message');
 			if (message.value != '') {
 				Messages.insert({
@@ -102,7 +107,12 @@ Template.input.events({
 		if (name == '') {
 			name = "Anonymous";
 		}
-		var channel_id = document.getElementById('channel_id').value;
+		var uid = Meteor.userId();
+		var channel_id = Active_Users.find({id: uid},{}).fetch()[0].channel_id;
+		window.alert(channel_id);
+
+		// FIXME: ensure channel_id is set correctly w/ server code
+		//window.alert(channel_id);
 		if (channel_id == '') {
 			channel_id = 0;	// default channel id
 		}
@@ -160,25 +170,15 @@ Template.body_info.events({
 
 		if(Meteor.user() && role != '' && subject != '')
 		{
-			if(role == "Tutor")
-			{
-				Active_Tutors.insert({
-					role: role,
-					subject: subject,
-					id: Meteor.userId(),
-					channel_id: 0,
-				});
-			}
-
-			else
-			{
-				Active_Students.insert({
-					role: role,
-					subject: subject,
-					id: Meteor.userId(),
-					channel_id: 0,
-				});
-			}
+			Active_Users.insert({
+				role: role,
+				subject: subject,
+				id: Meteor.userId(),
+				channel_id: 0,
+				available: true,
+			});
+			var ret = Meteor.call("findMatch");
+			window.alert(ret);
 			//window.alert(Active_Tutors.find({},{}).fetch()[0].subject);
 		}
 	},

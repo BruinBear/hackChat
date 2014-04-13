@@ -6,7 +6,7 @@
   {{> loginButtons align="right"}}<br>
   <h1>Chatapp</h1>
   {{> welcome }}
-  {{> login}}
+  <!--{{> login}}-->
   {{> body}}
   {{> body_select}}
   {{> body_info}}
@@ -20,10 +20,12 @@
 </template>
 
 <template name="body">
-  {{#if body_info true}}
-    {{> input}}
-    {{> messages}}
-    {{> clearall}}
+  {{#if logged_in true}}
+    {{#if body_info true}}
+      {{> input}}
+      {{> messages}}
+      {{> clearall}}
+    {{/if}}
   {{/if}}
 </template>
 

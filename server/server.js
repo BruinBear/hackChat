@@ -12,21 +12,22 @@ Meteor.methods({
 	//finds a teacher match for the student based on their subjects
 	//if a match is found, place the teacher and student in a new channel
 	findMatch : function() {
-	
+		//window.alert("h")
 		//get the caller's record
-		var caller = Active_Users.findOne({id : this.id}); 
-		
+		var caller = Active_Users.findOne({id : this.id});
+		return 234;
+		//window.alert(caller.role);
 		//if the caller was a student try to find a suitable teacher
 		//otherwise find a suitable student 
 		if (caller.role == "student")
 			var other_id = Active_Users.findOne({role : "teacher"},{available : true},
-						{cid : 0},{subject : caller.subject});
+						{channel_id : 0},{subject : caller.subject});
 
 		else 
 			var other_id = Active_Users.findOne({role : "student"},{available : true},
-						{cid : 0});  
+						{channel_id : 0},{subject : caller.subject});  
 		
-		if (other_id.count != 1)
+		if (other_id == '')
 			return -1; 
 		
 		//create an empty channel
@@ -39,13 +40,15 @@ Meteor.methods({
 				  num_users : 2});
 
 		 //add matched users to the channel
-		 Active_Users.update({id : this.id},{$set : {cid : max_cid}});
-		 Active_Users.update({id : other_id},{$set : {cid : max_cid}}); 
+		 Active_Users.update({id : this.id},{$set : {channel_id : max_cid}});
+		 Active_Users.update({id : other_id},{$set : {channel_id : max_cid}}); 
 
 		//return channel id
 		return max_cid;  
 	},
 	
+	// functions below are not used
+
 	//create a new channel(channelId is returned)   
 	createChannel : function(ctype,cname) {
 		var channels = Channels.find({});
@@ -68,15 +71,15 @@ Meteor.methods({
 		return Channels.update({id : chanid},{$inc : {num_users : 1}});
 	},
 
-	leaveChannel : function(chanid) {
-		//change the user's channel id to 0(default channel) 
-		Active_Users.update({id : this.id},{$set : {cid : 0}});
+	// leaveChannel : function(chanid) {
+	// 	//change the user's channel id to 0(default channel) 
+	// 	Active_Users.update({id : this.id},{$set : {cid : 0}});
 		
-		//update channel counts
-		Channels.update({id : chanid},{$inc : {num_users : -1}});
-		if (Channels.find({id : chanid}).num_users == 0 && (chanid != 0)
-			Channels.remove({id : chanid});
-	}
+	// 	//update channel counts
+	// 	Channels.update({id : chanid},{$inc : {num_users : -1}});
+	// 	if (Channels.find({id : chanid}).num_users == 0 && (chanid != 0)
+	// 		Channels.remove({id : chanid});
+	// }
 
 });  
 	
