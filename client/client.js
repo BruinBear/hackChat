@@ -110,7 +110,7 @@ Template.input.events({
 		}
 		var uid = Meteor.userId();
 		var channel_id = Active_Users.find({id: uid},{}).fetch()[0].channel_id;
-		window.alert(channel_id);
+		//window.alert(channel_id);
 
 		// FIXME: ensure channel_id is set correctly w/ server code
 		//window.alert(channel_id);
@@ -182,21 +182,21 @@ Template.body_info.events({
 			});
 			userWasLoggedIn = true;
 			//Meteor.call('findMatch');
-			alert("role: " + role);
+			//alert("role: " + role);
 			if (role == "teacher") {
 				var other_id = Active_Users.find({role : "student"},{available : true},
 						{channel_id : 0},{subject : subject}).fetch()[0].id;
-				alert("other_id found: " + other_id);
+				//alert("other_id found: " + other_id);
 			}
 			else {
 				var other_id = Active_Users.find({role : "teacher"},{available : true},
 							{channel_id : 0},{subject : subject}).fetch()[0].id;
-				alert("other_id found: " + other_id);
+				//alert("other_id found: " + other_id);
 			}
 			if (other_id == '') {
 				return -1;
 			}
-			alert("Number of active users: " + Active_Users.find({}).count());
+			//alert("Number of active users: " + Active_Users.find({}).count());
 			var channels = Channels.find({});
 			var max_cid = channels.count();
 			//window.alert(max_cid);
@@ -204,7 +204,7 @@ Template.body_info.events({
 					  name : "Private Help Session", 
 					  type : "private",
 					  num_users : 2});
-			alert("failed?");
+			//alert("failed?");
 			// move matched users to the new channel
 			var temp = Meteor.userId();
 			// var temp2 = Active_users.find({id : temp}).fetch()[0].channel_id;
@@ -225,10 +225,10 @@ Template.body_info.events({
 var userWasLoggedIn = false;
 
 Deps.autorun(function () {
-	alert("autorun working");
+	//alert("autorun working");
 	if (!Meteor.userId()) {
 		if (userWasLoggedIn){
-			alert("correctly detected signout: " + Session.get('stored_id'));
+			//alert("correctly detected signout: " + Session.get('stored_id'));
 			Meteor.call('deleteid', Session.get('stored_id'));
 		}
 	}
