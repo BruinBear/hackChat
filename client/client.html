@@ -3,14 +3,15 @@
 </head>
 
 <body>
-  {{> loginButtons align="right"}}<br>
-  <h1>Chatapp</h1>
-  {{> welcome }}
-  <!--{{> login}}-->
-  {{> body}}
-  {{> body_select}}
-  {{> body_info}}
-
+  <div id="outer">
+    <h1>Chatapp</h1>
+    {{> welcome }}
+    {{> loginButtons align="left"}}<br>
+    <!--{{> login}}-->
+    {{> body}}
+    {{> body_select}}
+    {{> body_info}}
+  </div>
 </body>
 
 <template name="welcome">
@@ -48,11 +49,16 @@
       {{else}}
         <p>Select your subject!</p>
         <select name="subject" id="subject">
-          <option value="algebra1">Algebra 1</option>
-          <option value="algebra2">Algebra 2</option>
-          <option value="calculus">calculus</option>
-          <option value="english">english</option>
-          <option value="physics">physics</option>
+          <option value="cs1">Computer Science I</option>
+          <option value="cs2">Computer Science II</option>
+          <option value="cs3">Computer Science III</option>
+          <option value="algorithms">Algorithms</option>
+          <option value="comarch">Computer Architecture</option>
+          <option value="databases">Databases</option>
+          <option value="opersystems">Operating Systems</option>
+          <option value="proglang">Programming Languages</option>
+          <option value="sfteng">Software Engineering</option>
+          <option value=""></option>
         </select>
         <input type="button" class="info" value="Submit">
       {{/if}}

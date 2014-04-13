@@ -204,13 +204,20 @@ Template.body_info.events({
 					  name : "Private Help Session", 
 					  type : "private",
 					  num_users : 2});
+
+			Messages.insert({
+				name: "Admin",
+				message: "You are now in a tutoring session!",
+				time: Date.now(),
+				channel_id: max_cid+1,
+			});
 			//alert("failed?");
 			// move matched users to the new channel
 			var temp = Meteor.userId();
 			// var temp2 = Active_users.find({id : temp}).fetch()[0].channel_id;
 			// alert("channel_id found: " + temp2);
 
-			Meteor.call('updateid', Meteor.userId(), other_id, max_cid);
+			Meteor.call('updateid', Meteor.userId(), other_id, max_cid+1);
 			// Active_Users.update({id : Meteor.userId()},{$set : {channel_id : max_cid}});
 			// Active_Users.update({id : other_id},{$set : {channel_id : max_cid}}); 
 			

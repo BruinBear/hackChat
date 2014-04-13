@@ -6,6 +6,12 @@ Meteor.startup(function () {
 			  name : "Private Help Session", 
 			  type : "private",
 			  num_users : -1});
+	Messages.insert({
+		name: "Admin",
+		message: "You are now in the waiting room! Please wait for a tutor to connect.",
+		time: Date.now(),
+		channel_id: 0,
+	});
 });
 
 Meteor.methods({
