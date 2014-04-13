@@ -1,5 +1,6 @@
 Session.set('channel_id', null);
 
+var storedId = -1;
 /**
 * Templates
 */
@@ -140,6 +141,7 @@ Template.clearall.events({
 Template.login.events({
 	'click input.clicked' : function () {
 		Session.set("logged_in", true);
+		storedId = Meteor.Id();
 		//window.alert("working");
 	},
 })
@@ -164,12 +166,13 @@ Template.body_info.events({
 		var subject = document.getElementById('subject').value;
 		var role = '';
 		if(Session.get("tutor"))
-			role = "Tutor";
+			role = "teacher";
 		else
-			role = "Student";
+			role = "student";
 
 		if(Meteor.user() && role != '' && subject != '')
 		{
+
 			Active_Users.insert({
 				role: role,
 				subject: subject,
@@ -177,12 +180,59 @@ Template.body_info.events({
 				channel_id: 0,
 				available: true,
 			});
-			var ret = Meteor.call("findMatch");
-			window.alert(ret);
-			//window.alert(Active_Tutors.find({},{}).fetch()[0].subject);
+			userWasLoggedIn = true;
+			//Meteor.call('findMatch');
+			alert("role: " + role);
+			if (role == "teacher") {
+				var other_id = Active_Users.find({role : "student"},{available : true},
+						{channel_id : 0},{subject : subject}).fetch()[0].id;
+				alert("other_id found: " + other_id);
+			}
+			else {
+				var other_id = Active_Users.find({role : "teacher"},{available : true},
+							{channel_id : 0},{subject : subject}).fetch()[0].id;
+				alert("other_id found: " + other_id);
+			}
+			if (other_id == '') {
+				return -1;
+			}
+			alert("Number of active users: " + Active_Users.find({}).count());
+			var channels = Channels.find({});
+			var max_cid = channels.count();
+			//window.alert(max_cid);
+			Channels.insert({ id : max_cid+1, 
+					  name : "Private Help Session", 
+					  type : "private",
+					  num_users : 2});
+			alert("failed?");
+			// move matched users to the new channel
+			var temp = Meteor.userId();
+			// var temp2 = Active_users.find({id : temp}).fetch()[0].channel_id;
+			// alert("channel_id found: " + temp2);
+
+			Meteor.call('updateid', Meteor.userId(), other_id, max_cid);
+			// Active_Users.update({id : Meteor.userId()},{$set : {channel_id : max_cid}});
+			// Active_Users.update({id : other_id},{$set : {channel_id : max_cid}}); 
+			
+			//alert(Active_Users.find({id : Meteor.userId()}).fetch()[0].channel_id);
+			//return channel id
+			return max_cid;  
+
 		}
 	},
 
 })
+var userWasLoggedIn = false;
+
+Deps.autorun(function () {
+	if (!Meteor.userId()) {
+		if (userWasLoggedIn){
+			Meteor.call('deleteid', storedId);
+		}
+	}
+	else {
+		userWasLoggedIn = true;
+	}
+});
 
 //window.alert("hello");

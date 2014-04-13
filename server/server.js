@@ -1,21 +1,40 @@
 Meteor.startup(function () {
-	Channels.insert({id : 0});
+	Channels.remove({});
+	Messages.remove({});
+	Active_Users.remove({});
+	Channels.insert({ id : 0, 
+			  name : "Private Help Session", 
+			  type : "private",
+			  num_users : -1});
 });
 
 Meteor.methods({
 	
 	//allows client to clear their chat window
 	clearchat : function() {
-			return Messages.remove({});
-		},
+		return Messages.remove({});
+	},
+
+	clearchannels : function() {
+		return Channels.remove({});
+	},
+
+	updateid : function(userid, otherid, maxcid) {
+		Active_Users.update({id : userid},{$set : {channel_id : maxcid}});
+		Active_Users.update({id : otherid},{$set : {channel_id : maxcid}}); 
+	},
+
+	deleteid : function(userid) {
+		Active_Users.remove({id : userid});
+	},
 
 	//finds a teacher match for the student based on their subjects
 	//if a match is found, place the teacher and student in a new channel
 	findMatch : function() {
 		//window.alert("h")
 		//get the caller's record
-		var caller = Active_Users.findOne({id : this.id});
-		return 234;
+		var caller = Active_Users.findOne({id : this.userId});
+		
 		//window.alert(caller.role);
 		//if the caller was a student try to find a suitable teacher
 		//otherwise find a suitable student 
@@ -40,7 +59,7 @@ Meteor.methods({
 				  num_users : 2});
 
 		 //add matched users to the channel
-		 Active_Users.update({id : this.id},{$set : {channel_id : max_cid}});
+		 Active_Users.update({id : this.userId},{$set : {channel_id : max_cid}});
 		 Active_Users.update({id : other_id},{$set : {channel_id : max_cid}}); 
 
 		//return channel id
